@@ -156,8 +156,10 @@ Remaining Issue #6 scope is the P1 PNG CLI command/JSON wiring. Per-channel SSIM
 MS-SSIM and per-pixel component maps are not part of this P0. There are no new
 runtime dependencies or intentionally changed existing APIs.
 
-Engineering assessment: **Upstream PR Ready: Yes** for the documented P0 scope;
-**Hackathon final engineering acceptance Ready: Yes** for the user's stated P0.
-The baseline Windows root native-build limitation remains disclosed. These
-judgments do not assert a maintainer's or competition organizer's approval.
-No push, PR creation, publication or contest registration was performed.
+Assessment: **Upstream PR Ready: Yes** for the documented P0 engineering scope.
+**Hackathon final acceptance Ready: No**: the P0 engineering implementation is
+ready, but the contribution is still local, without a public result repository
+or contest registration. Eligibility of work performed on October 31 for the
+November round also requires the organizers' confirmation. The baseline Windows
+root native-build limitation remains disclosed. No maintainer or organizer
+approval is claimed. No push, PR creation, publication or registration was performed.
