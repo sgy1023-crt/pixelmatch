@@ -11,3 +11,5 @@ component/test/gen/
 npm/_build/
 npm/.mooncakes/
 npm/node_modules/
+examples/ssim/_build/
+examples/ssim/.mooncakes/

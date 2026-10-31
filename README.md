@@ -10,6 +10,7 @@ Port of [mapbox/pixelmatch](https://github.com/mapbox/pixelmatch) to MoonBit.
 - Anti-aliasing detection
 - Configurable threshold
 - Diff image generation
+- Local Gaussian SSIM with a signed per-pixel similarity map and component scores
 - **AI-friendly diff reports** with automatic shape hints
 - Simple and fast API
 
@@ -18,6 +19,22 @@ Port of [mapbox/pixelmatch](https://github.com/mapbox/pixelmatch) to MoonBit.
 ```bash
 moon add mizchi/pixelmatch
 ```
+
+## Local Gaussian SSIM
+
+```moonbit
+let result = @pixelmatch.ssim(before, after) // raises SsimError on invalid input
+println(result.score) // raw signed SSIM; can be negative
+println(result.display_score()) // explicitly clipped to 0..1 for display
+let center = result.map.values[(result.map.height / 2) * result.map.width + result.map.width / 2]
+let preview = result.map.to_image() // grayscale Image; numeric map is preserved
+```
+
+Defaults: 11×11 Gaussian, sigma 1.5, luminance after alpha composition over white,
+population covariance, reflect boundaries. The score and three component means
+exclude the window-radius border. See [the numerical contract and API](docs/ssim.md),
+[validation and benchmarks](docs/ssim-validation.md), and the
+[independent consumer](examples/ssim/main.mbt). SSIM complements pixel-level diff.
 
 ## Usage
 

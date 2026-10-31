@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "generator": "tools/generate_ssim_reference.py",
+    "versions": {
+      "numpy": "2.2.4",
+      "scipy": "1.17.0",
+      "scikit-image": "0.26.0"
+    },
+    "input": "Deterministic RGBA8 arrays; row-major, no image decoding or RNG.",
+    "preprocessing": "Y = 255 + (0.29889531*r + 0.58662247*g + 0.11448223*b - 255) * (a / 255); float64, no quantization.",
+    "map": "scipy.ndimage.gaussian_filter; explicit radius=window_size//2; reflect; population covariance; K1=.01, K2=.03, data_range=255; signed values retained.",
+    "components": "Direct 2D normalized Gaussian windows, NumPy symmetric padding, weighted central moments, C3=C2/2. All fixtures assert all three components, including constant inputs and one-pixel windows.",
+    "aggregation": "Mean of map and components after cropping window_size//2 from every edge. Score is mean(l*c*s), not mean(l)*mean(c)*mean(s).",
+    "cross_check": "skimage.metrics.structural_similarity(full=True, gaussian_weights=True, use_sample_covariance=False, data_range=255), only when its implicit truncate=3.5 radius matches the explicit window.",
+    "sources": [
+      "https://scikit-image.org/docs/0.26.x/api/skimage.metrics.html#skimage.metrics.structural_similarity",
+      "https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.gaussian_filter.html",
+      "https://ece.uwaterloo.ca/~z70wang/publications/ssim.pdf"
+    ]
+  },
+  "absolute_tolerance": {
+    "score_and_map": 1e-09,
+    "nonconstant_components": 1e-08
+  },
+  "fixtures": [
+    {
+      "name": "default_texture",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": true,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 1.3877787807814457e-17
+      },
+      "expected": {
+        "score": 0.08847168294959379,
+        "luminance": 0.9997953166591863,
+        "contrast": 0.9953550370020721,
+        "structure": 0.08885425552077524,
+        "map": {
+          "length": 156,
+          "sha256": "0e0edefc6cb4fd0328560939435c94b76acb5d03b92e2be8024242adf92f4783",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "sigma_narrow",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 0.65
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": false,
+      "skimage_cross_check_error": null,
+      "expected": {
+        "score": -0.0083869189538959,
+        "luminance": 0.9911152976531875,
+        "contrast": 0.9818048706746412,
+        "structure": -0.00784355983182694,
+        "map": {
+          "length": 156,
+          "sha256": "9d772b1a4f1bdb3e6329c36951bd0daa8a0f2d5884c008c823244cbf28956696",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "sigma_wide",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 2.4
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": false,
+      "skimage_cross_check_error": null,
+      "expected": {
+        "score": 0.14749784068371477,
+        "luminance": 0.9999214553857443,
+        "contrast": 0.9973306421270675,
+        "structure": 0.1479096018743004,
+        "map": {
+          "length": 156,
+          "sha256": "eb088c765684fa5e345c6a874fe40611d0df435f46e925715721c43be33ca7b7",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "window_five",
+      "width": 9,
+      "height": 8,
+      "options": {
+        "window_size": 5,
+        "sigma": 1.1
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": false,
+      "skimage_cross_check_error": null,
+      "expected": {
+        "score": -0.3950812910322591,
+        "luminance": 0.9969472769745474,
+        "contrast": 0.9759684768443246,
+        "structure": -0.4061370002296938,
+        "map": {
+          "length": 72,
+          "sha256": "0f5afd9e29fb9aeebc852ac04a5647cbe25488c70a6ada46b5fb57c2448dc787",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "window_one",
+      "width": 4,
+      "height": 3,
+      "options": {
+        "window_size": 1,
+        "sigma": 0.8
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": false,
+      "skimage_cross_check_error": null,
+      "expected": {
+        "score": 0.8088189541544811,
+        "luminance": 0.8088189541544811,
+        "contrast": 1.0,
+        "structure": 1.0,
+        "map": {
+          "length": 12,
+          "sha256": "f722ce7cb4d86f4f20b81f4788e43ba4b2ae10689e76ae766375b367a817650d",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "minimum_extent",
+      "width": 11,
+      "height": 11,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 6.938893903907228e-18
+      },
+      "expected": {
+        "score": -0.41355883856555,
+        "luminance": 0.9996912220057994,
+        "contrast": 0.9849059919570332,
+        "structure": -0.42002645862136756,
+        "map": {
+          "length": 121,
+          "sha256": "59caa517618a9e20965a06e5db06f38052559ce332ee44dfdd73eb3cb46557c2",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "alpha_texture",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 1.3877787807814457e-17
+      },
+      "expected": {
+        "score": 0.20129130701367937,
+        "luminance": 0.9987139856267221,
+        "contrast": 0.9762951303037397,
+        "structure": 0.20669866059073974,
+        "map": {
+          "length": 156,
+          "sha256": "9ddc725d16e934c992b49039b5c0ce476e890e64a1f1b013b4f09f3d5b14d1ef",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "anticorrelated_checkerboard",
+      "width": 12,
+      "height": 13,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 0.0
+      },
+      "expected": {
+        "score": -0.9964064684286985,
+        "luminance": 0.9999999999999992,
+        "contrast": 1.0,
+        "structure": -0.996406468428699,
+        "map": {
+          "length": 156,
+          "sha256": "7e9d2c9fa4847932f038828a1d1a425338c72ca653dab6ba48ccfda50544548e",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "boundary_impulses",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 0.0
+      },
+      "expected": {
+        "score": 0.9993870973770406,
+        "luminance": 0.9999999689637988,
+        "contrast": 0.9999999927171349,
+        "structure": 0.9993871356697309,
+        "map": {
+          "length": 156,
+          "sha256": "6775329a4421c953a865421a67a72e4f92f29f8a0d258124c11ae17f0d8bb844",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "constant_different",
+      "width": 11,
+      "height": 11,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 1.1102230246251565e-16,
+        "map_max_absolute_error": 1.1102230246251565e-16
+      },
+      "expected": {
+        "score": 0.8000634808198226,
+        "luminance": 0.8000634808198227,
+        "contrast": 1.0,
+        "structure": 1.0,
+        "map": {
+          "length": 121,
+          "sha256": "5fb0b0defc8105d9d753b4f38c1538e467e1f87537ca28eb07f4d08a0d6b9005",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "constant_against_texture",
+      "width": 13,
+      "height": 12,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 1.3877787807814457e-17
+      },
+      "expected": {
+        "score": 0.023205815926617676,
+        "luminance": 0.9562134304479647,
+        "contrast": 0.024270142014608042,
+        "structure": 0.9999999999999764,
+        "map": {
+          "length": 156,
+          "sha256": "36aa7d6c8a051c8bf8becbe75d4cc9c667c0e2e95e5333d73caa505a71729e76",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    },
+    {
+      "name": "transparent_hidden_rgb",
+      "width": 11,
+      "height": 11,
+      "options": {
+        "window_size": 11,
+        "sigma": 1.5
+      },
+      "use_default_options": false,
+      "check_components": true,
+      "skimage_cross_checked": true,
+      "skimage_cross_check_error": {
+        "score_absolute_error": 0.0,
+        "map_max_absolute_error": 0.0
+      },
+      "expected": {
+        "score": 1.0,
+        "luminance": 1.0,
+        "contrast": 1.0,
+        "structure": 1.0,
+        "map": {
+          "length": 121,
+          "sha256": "3d1bf8db0dbea0887915b8d24a5c41066dec912ee8e65b9130710be1e46a63ab",
+          "encoding": "little-endian float64, row-major; complete values in src/ssim_reference_test.mbt"
+        }
+      }
+    }
+  ]
+}

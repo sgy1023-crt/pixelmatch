@@ -1,0 +1,5 @@
+import {
+  "mizchi/pixelmatch" @pixelmatch,
+}
+
+options("is-main": true)

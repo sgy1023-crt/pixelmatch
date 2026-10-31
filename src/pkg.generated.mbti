@@ -6,69 +6,79 @@ import {
 }
 
 // Values
-pub fn compensated_diff(Image, Image, Array[ShiftRegion], Double) -> Int
+pub fn compensated_diff(Image, Image, Array[ShiftRegion], Double) -> Int32
 
-pub fn detect_global_shift(FixedArray[Double], FixedArray[Double], Int) -> Int
+pub fn detect_global_shift(FixedArray[Double], FixedArray[Double], Int32) -> Int32
 
-pub fn detect_piecewise_shift(FixedArray[Double], FixedArray[Double], Int, window_size? : Int) -> Array[ShiftRegion]
+pub fn detect_piecewise_shift(FixedArray[Double], FixedArray[Double], Int32, window_size? : Int32) -> Array[ShiftRegion]
 
-pub fn diff_report(Image, Image, Options, grid_size? : Int) -> DiffReport
+pub fn diff_report(Image, Image, Options, grid_size? : Int32) -> DiffReport
 
 pub fn luminance_profile(Image) -> FixedArray[Double]
 
 pub fn match_ratio(Image, Image, Options) -> Double
 
-pub fn pixelmatch(Image, Image, Image?, Options) -> Int
+pub fn pixelmatch(Image, Image, Image?, Options) -> Int32
 
-pub fn pixelmatch_fast(Image, Image, Double) -> Int
+pub fn pixelmatch_fast(Image, Image, Double) -> Int32
 
-pub fn pixelmatch_simple(Image, Image, Double) -> Int
+pub fn pixelmatch_simple(Image, Image, Double) -> Int32
 
-pub fn pixelmatch_simple_prefilter(Image, Image, Double) -> Int
+pub fn pixelmatch_simple_prefilter(Image, Image, Double) -> Int32
+
+pub fn ssim(Image, Image, options? : SsimOptions) -> SsimResult raise SsimError
 
 // Errors
+pub suberror SsimError {
+  InvalidImage(String)
+  InvalidOptions(String)
+} derive(@debug.Debug)
+pub fn SsimError::output(Self, &Logger) -> Unit
+pub fn SsimError::to_repr(Self) -> @debug.Repr
+pub fn SsimError::to_string(Self) -> String
+pub impl Show for SsimError
 
 // Types and methods
 pub(all) struct Color {
-  r : Int
-  g : Int
-  b : Int
-  a : Int
+  r : Int32
+  g : Int32
+  b : Int32
+  a : Int32
 } derive(Eq, @debug.Debug)
 pub fn Color::equal(Self, Self) -> Bool
 pub fn Color::not_equal(Self, Self) -> Bool
 pub fn Color::output(Self, &Logger) -> Unit
-pub fn Color::rgb(Int, Int, Int) -> Self
-pub fn Color::rgba(Int, Int, Int, Int) -> Self
+pub fn Color::rgb(Int32, Int32, Int32) -> Self
+pub fn Color::rgba(Int32, Int32, Int32, Int32) -> Self
 pub fn Color::to_repr(Self) -> @debug.Repr
 pub fn Color::to_string(Self) -> String
 pub impl Show for Color
 
 pub(all) struct DiffRegion {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
-  diff_pixels : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+  diff_pixels : Int32
   region_type : String
 }
 
 pub(all) struct DiffReport {
-  width : Int
-  height : Int
-  total_pixels : Int
-  diff_count : Int
-  aa_count : Int
+  width : Int32
+  height : Int32
+  total_pixels : Int32
+  diff_count : Int32
+  aa_count : Int32
   match_ratio : Double
-  grid : Array[Array[Int]]
-  grid_cols : Int
-  grid_rows : Int
+  grid : Array[Array[Int32]]
+  grid_cols : Int32
+  grid_rows : Int32
   regions : Array[DiffRegion]
   shift_only : Bool
-  content_change_count : Int
-  global_shift : Int
+  content_change_count : Int32
+  global_shift : Int32
   shift_regions : Array[ShiftRegion]
-  compensated_diff_count : Int
+  compensated_diff_count : Int32
 }
 pub fn DiffReport::to_compact(Self) -> String
 pub fn DiffReport::to_compact_with_hints(Self) -> String
@@ -76,14 +86,14 @@ pub fn DiffReport::to_json(Self) -> String
 pub fn DiffReport::to_text(Self) -> String
 
 pub(all) struct Image {
-  width : Int
-  height : Int
-  data : FixedArray[Int]
+  width : Int32
+  height : Int32
+  data : FixedArray[Int32]
 }
-pub fn Image::from_pixels(Int, Int, Array[Color]) -> Self
-pub fn Image::get_pixel(Self, Int, Int) -> Color
-pub fn Image::new(Int, Int) -> Self
-pub fn Image::set_pixel(Self, Int, Int, Color) -> Unit
+pub fn Image::from_pixels(Int32, Int32, Array[Color]) -> Self
+pub fn Image::get_pixel(Self, Int32, Int32) -> Color
+pub fn Image::new(Int32, Int32) -> Self
+pub fn Image::set_pixel(Self, Int32, Int32, Color) -> Unit
 
 pub(all) struct Options {
   threshold : Double
@@ -98,10 +108,34 @@ pub(all) struct Options {
 pub fn Options::default() -> Self
 
 pub(all) struct ShiftRegion {
-  y_start : Int
-  y_end : Int
-  shift : Int
+  y_start : Int32
+  y_end : Int32
+  shift : Int32
 }
+
+pub struct SsimMap {
+  width : Int32
+  height : Int32
+  values : FixedArray[Double]
+}
+pub fn SsimMap::to_image(Self) -> Image
+
+pub(all) struct SsimOptions {
+  window_size : Int32
+  sigma : Double
+} derive(@debug.Debug)
+pub fn SsimOptions::default() -> Self
+pub fn SsimOptions::to_repr(Self) -> @debug.Repr
+
+pub struct SsimResult {
+  score : Double
+  luminance : Double
+  contrast : Double
+  structure : Double
+  map : SsimMap
+  options : SsimOptions
+}
+pub fn SsimResult::display_score(Self) -> Double
 
 // Type aliases
 
