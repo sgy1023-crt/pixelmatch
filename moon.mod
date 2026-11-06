@@ -5,6 +5,7 @@ version = "0.6.2"
 import {
   "mizchi/image@0.4.3",
   "mizchi/zlib@0.4.10",
+  "moonbitlang/x@0.5.5",
 }
 
 readme = "README.md"

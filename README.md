@@ -36,6 +36,37 @@ exclude the window-radius border. See [the numerical contract and API](docs/ssim
 [validation and benchmarks](docs/ssim-validation.md), and the
 [independent consumer](examples/ssim/main.mbt). SSIM complements pixel-level diff.
 
+### Compare two PNGs from the command line
+
+From a checkout of this fork, run the example with MoonBit and Node.js
+(verified with MoonBit CLI 0.1.20261028 and Node.js 24.22.1).
+
+```sh
+moon run --target js src/cmd/pixelmatch ssim examples/ssim-cli/before.png examples/ssim-cli/after.png --output _build/ssim-map.png
+```
+
+The two synthetic 96×64 images differ in the color of one rectangle. The
+command writes an opaque grayscale PNG of the same size and prints one JSON
+object to stdout. The example's `ssim` is approximately `0.9984308931`. The
+`ssim` field clips the score to [0, 1], `raw_ssim` retains the signed score,
+and `luminance`, `contrast`, and `structure` are the component means. White
+indicates higher similarity. The command uses the library's default 11×11
+window and requires equal-sized images that fit that window. Errors are
+reported to stderr with a nonzero exit status.
+[Example output image](examples/ssim-cli/expected-map.png)
+
+Build the Node.js command and run its end-to-end tests with these commands.
+
+```sh
+moon build --target js --release src/cmd/pixelmatch
+node --test tools/ssim_cli_test.mjs
+```
+
+This fork extends mizchi/pixelmatch with the SSIM library and the PNG workflow
+proposed in Issue #6. [Upstream project](https://github.com/mizchi/pixelmatch) ·
+[Issue #6](https://github.com/mizchi/pixelmatch/issues/6) ·
+[Development handoff](handoff.md)
+
 ## Usage
 
 ```moonbit
