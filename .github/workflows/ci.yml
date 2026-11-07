@@ -6,23 +6,86 @@ on:
       - main
       - "codex/**"
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   test:
+    name: Library (${{ matrix.target }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [js, wasm-gc, native]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
       - name: Install MoonBit CLI
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Record toolchain versions
+        run: |
+          moon version --all
+          node --version
       - name: Moon update
         run: moon update
-      - name: Moon check
-        run: moon check --deny-warn
       - name: Moon test
-        run: moon test
+        run: timeout 60s moon test --target ${{ matrix.target }} --deny-warn
+      - name: Moon check
+        run: moon check --target ${{ matrix.target }} --deny-warn
+
+  ssim-cli:
+    name: PNG SSIM CLI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Install MoonBit CLI
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Record toolchain versions
+        run: |
+          moon version --all
+          node --version
+      - name: Moon update
+        run: moon update
+      - name: Check CLI formatting
+        run: moon fmt --check src/cmd/pixelmatch
+      - name: Build CLI
+        run: moon build --target js --release --deny-warn src/cmd/pixelmatch
+      - name: CLI end-to-end tests
+        run: timeout 60s node --test tools/ssim_cli_test.mjs
+      - name: Reproduce README example
+        run: |
+          moon run --target js --release src/cmd/pixelmatch ssim examples/ssim-cli/before.png examples/ssim-cli/after.png --output _build/ssim-map.png | tee _build/ssim-report.json
+          cmp examples/ssim-cli/expected-map.png _build/ssim-map.png
+      - name: Upload demo results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssim-cli-demo
+          path: |
+            _build/ssim-map.png
+            _build/ssim-report.json
+          if-no-files-found: error
+          retention-days: 30
 
   bench:
     strategy:
