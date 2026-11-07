@@ -4,6 +4,10 @@ Validation date: 2026-10-31. P0 engineering implementation is complete.
 This records local evidence, not GitHub CI results, maintainer approval,
 publication, competition submission or organizer acceptance.
 
+This is the P0 snapshot. Subsequent CLI work and GitHub CI results are recorded
+in the development handoff. The current branch requires moonc 0.10.20 or newer.
+[Current setup](../README.md) · [Development handoff](../handoff.md)
+
 ## Baseline and scope
 
 - Upstream: `https://github.com/mizchi/pixelmatch`, main

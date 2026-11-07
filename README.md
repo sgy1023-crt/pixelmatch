@@ -38,8 +38,10 @@ exclude the window-radius border. See [the numerical contract and API](docs/ssim
 
 ### Compare two PNGs from the command line
 
-From a checkout of this fork, run the example with MoonBit and Node.js
-(verified with MoonBit CLI 0.1.20261028 and Node.js 24.22.1).
+From a checkout of this fork, run the example with MoonBit and Node.js.
+The current source requires moonc 0.10.20 or newer for attribute-based
+trait derivation. CI records the installed compiler version and uses
+Node.js 24.22.1.
 
 ```sh
 moon run --target js src/cmd/pixelmatch ssim examples/ssim-cli/before.png examples/ssim-cli/after.png --output _build/ssim-map.png

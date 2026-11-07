@@ -29,22 +29,24 @@ pub fn pixelmatch_simple_prefilter(Image, Image, Double) -> Int32
 pub fn ssim(Image, Image, options? : SsimOptions) -> SsimResult raise SsimError
 
 // Errors
+#derive(@debug.Debug)
 pub suberror SsimError {
   InvalidImage(String)
   InvalidOptions(String)
-} derive(@debug.Debug)
+}
 pub fn SsimError::output(Self, &Logger) -> Unit
 pub fn SsimError::to_repr(Self) -> @debug.Repr
 pub fn SsimError::to_string(Self) -> String
 pub impl Show for SsimError
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Color {
   r : Int32
   g : Int32
   b : Int32
   a : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Color::equal(Self, Self) -> Bool
 pub fn Color::not_equal(Self, Self) -> Bool
 pub fn Color::output(Self, &Logger) -> Unit
@@ -120,10 +122,11 @@ pub struct SsimMap {
 }
 pub fn SsimMap::to_image(Self) -> Image
 
+#derive(@debug.Debug)
 pub(all) struct SsimOptions {
   window_size : Int32
   sigma : Double
-} derive(@debug.Debug)
+}
 pub fn SsimOptions::default() -> Self
 pub fn SsimOptions::to_repr(Self) -> @debug.Repr
 

@@ -33,6 +33,7 @@
 - CLI 作业将从检出代码构建、跑端到端测试、复现 README 示例并核对 PNG，保留相似度图与 JSON 产物 30 天。
 - 工作流增加手动触发入口，待推送后验证真实远端运行。
 - 官方历史工具链下载地址返回 HTTP 403，CI 沿用官方 latest 安装入口，并在日志记录实际 MoonBit 与 Node.js 版本。
+- 首次远端 MoonBit CLI 0.1.20261104 / moonc 0.10.20 将旧 `derive(...)` 语法作为弃用警告，严格检查因此失败。Color、SsimOptions、SsimError 的三处声明已迁移为 `#derive(...)`，README 已注明工具链要求。本地使用工作区的隔离工具链 `.ci-toolchain/runtime`，在 0.10.20 上三后端分别 59/59 测试通过，三目标严格检查通过。远端修复结果待下一轮运行确认。[首次运行](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42347873621)
 
 ## 2026-11-06
 

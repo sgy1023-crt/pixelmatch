@@ -2,10 +2,11 @@
 /// A normalized Gaussian window. Inputs are RGBA8, composited over white and
 /// converted to the existing pixelmatch Y luminance. Covariance is population
 /// covariance; the score excludes a border of window_size / 2 pixels.
+#derive(Debug)
 pub(all) struct SsimOptions {
   window_size : Int32
   sigma : Double
-} derive(Debug)
+}
 
 ///|
 pub extend SsimOptions with @debug.Debug::{to_repr}
@@ -16,10 +17,11 @@ pub fn SsimOptions::default() -> SsimOptions {
 }
 
 ///|
+#derive(Debug)
 pub suberror SsimError {
   InvalidImage(String)
   InvalidOptions(String)
-} derive(Debug)
+}
 
 ///|
 pub extend SsimError with @debug.Debug::{to_repr}
