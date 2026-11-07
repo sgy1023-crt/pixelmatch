@@ -1,5 +1,7 @@
 # pixelmatch
 
+[![CI](https://github.com/sgy1023-crt/pixelmatch/actions/workflows/ci.yml/badge.svg?branch=codex%2Flocal-gaussian-ssim)](https://github.com/sgy1023-crt/pixelmatch/actions/workflows/ci.yml)
+
 **Pixelmatch for Humans and AI** - Fast pixel-level image comparison library for MoonBit/WASM.
 
 Port of [mapbox/pixelmatch](https://github.com/mapbox/pixelmatch) to MoonBit.
