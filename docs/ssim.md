@@ -154,7 +154,7 @@ Measured timings and environment are recorded in `ssim-validation.md`.
 | Luminance, contrast, structure | Implemented as interior aggregate component means |
 | Score in 0..1 | Explicit `display_score()`; raw SSIM remains signed |
 | SSIM map image | Implemented as grayscale existing `Image` |
-| `pixelmatch ssim before.png after.png --output ...` | P1; CLI/PNG command not included |
+| `pixelmatch ssim before.png after.png --output ...` | Implemented by the Node.js PNG CLI; see the README |
 | Per-channel variant, MS-SSIM, component maps | Outside this luminance-only P0 |
 
 The existing upstream comparator produces pixel differences and reports; this
