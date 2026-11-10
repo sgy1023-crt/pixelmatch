@@ -40,7 +40,7 @@ exclude the window-radius border. See [the numerical contract and API](docs/ssim
 
 ### Compare two PNGs from the command line
 
-From a checkout of this fork, run the example with MoonBit and Node.js.
+From a checkout of this fork, run the example with MoonBit and Node.js 24.
 The current source requires moonc 0.10.20 or newer for attribute-based
 trait derivation. CI records the installed compiler version and uses
 Node.js 24.22.1.
@@ -58,6 +58,13 @@ indicates higher similarity. The command uses the library's default 11×11
 window and requires equal-sized images that fit that window. Errors are
 reported to stderr with a nonzero exit status.
 [Example output image](examples/ssim-cli/expected-map.png)
+
+The output directory must allow creating and replacing files. The CLI writes
+and closes a unique temporary file in that directory before replacing the
+destination. Write and replacement errors preserve any existing output.
+Concurrent calls that share a path leave the last successfully replaced PNG.
+The CLI follows output symlinks and preserves basic POSIX permission bits on
+an existing regular target. Other hard links retain the previous file.
 
 Build the Node.js command and run its end-to-end tests with these commands.
 

@@ -40,9 +40,7 @@ fn write_png(
   }) catch {
     err => raise CliError("cannot encode PNG '\{path}': \{err}")
   }
-  @fs.write_bytes_to_file(path, encoded) catch {
-    @fs.IOError(message) => raise CliError("cannot write '\{path}': \{message}")
-  }
+  write_atomic_output(path, encoded)
 }
 
 ///|
