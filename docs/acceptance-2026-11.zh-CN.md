@@ -2,7 +2,7 @@
 
 更新日期为北京时间 2026-11-10，申报方向为“已有项目维护”。项目已通过报名初审，走季度优秀社区项目评选路径。章程第 5.2 节规定了社区项目季度评选流程，第六章将 150 元启动支持与 350 元完成支持列为新生态项目建设的基础共建激励。本方向无需新项目的月度验收，也不计入这 500 元支持。第二赛季度为 2026 年 11 月至 2027 年 1 月，具体评选安排以组委会通知为准。[正式章程](https://bxup9uklfcb.feishu.cn/wiki/Dx4Bwd6D1i3GfHkajQCcF7SznEd) · [十一月赛程](https://moonbitlang.github.io/Hackathon2026/)
 
-项目名称为“Pixelmatch 局部 Gaussian SSIM 与逐像素相似度图”。公开 Fork 的默认分支为 `codex/local-gaussian-ssim`。本文按初审邮件提到的四个维度整理工程证据，引用的已验证代码基线为 `a3af3df4143836bdd886dacce0e635dce48bee38`。[公开仓库](https://github.com/sgy1023-crt/pixelmatch) · [成果分支](https://github.com/sgy1023-crt/pixelmatch/tree/codex/local-gaussian-ssim) · [已验证基线](https://github.com/sgy1023-crt/pixelmatch/commit/a3af3df4143836bdd886dacce0e635dce48bee38)
+项目名称为“Pixelmatch 局部 Gaussian SSIM 与逐像素相似度图”。公开 Fork 的默认分支为 `codex/local-gaussian-ssim`。本文按初审邮件提到的四个维度整理工程证据，引用的已验证代码基线为 `33bf45fd39c8c5c414b688e81a2a1c22c806fb24`。[公开仓库](https://github.com/sgy1023-crt/pixelmatch) · [成果分支](https://github.com/sgy1023-crt/pixelmatch/tree/codex/local-gaussian-ssim) · [已验证基线](https://github.com/sgy1023-crt/pixelmatch/commit/33bf45fd39c8c5c414b688e81a2a1c22c806fb24)
 
 ## 项目完成度与新增贡献
 
@@ -13,6 +13,7 @@
 | P0 库能力 | 纯 MoonBit 局部高斯窗口、整体评分、逐像素 Double map、亮度／对比度／结构分量、灰度 Image 转换 | [SSIM 实现](../src/ssim.mbt)、[API 与数值约定](ssim.md) |
 | 11 月新增使用流程 | 读取两张 PNG、调用 SSIM、写出灰度 PNG、向 stdout 输出 JSON，失败写 stderr 并返回非零状态 | [CLI 入口](../src/cmd/pixelmatch/main.mbt)、[使用说明](../README.md#compare-two-pngs-from-the-command-line) |
 | 11 月新增工程验证 | 三后端库检查与测试、Node.js CLI 构建与端到端测试、README 样例复现及产物保存 | [CI 工作流](../.github/workflows/ci.yml)、[CLI 测试](../tools/ssim_cli_test.mjs) |
+| 11 月输出可靠性修复 | 临时文件写完后原子替换，写入与替换失败保留旧 PNG，验证并发输出 | [输出实现](../src/cmd/pixelmatch/output.mbt)、[故障注入用例](../tools/fixtures/ssim-output-fault.cjs) |
 | 11 月工具链适配 | 三处类型派生声明迁移至 `#derive(...)`，支持 moonc 0.10.20 的严格警告检查 | [兼容性提交](https://github.com/sgy1023-crt/pixelmatch/commit/490f6c601e480be4efb365990ad2f542df559d26) |
 
 上游既有的像素差异算法、图像类型、报告功能、C 桩及依赖 PNG 编解码能力沿用原作者成果。本人贡献范围为新增 SSIM 库、命令行接入、对应测试与文档，以及后续 CI 和工具链适配。Python 科学计算库用于生成和核对参考数值，源码归属与引用见数值文档。
@@ -30,6 +31,7 @@
 | 2026-11-07 14:37:35 | [0d20e0c](https://github.com/sgy1023-crt/pixelmatch/commit/0d20e0c8ff89a75d4943b8ee4ed24d42567927d7) | 接入三后端与 CLI 的 GitHub CI |
 | 2026-11-07 14:48:29 | [490f6c6](https://github.com/sgy1023-crt/pixelmatch/commit/490f6c601e480be4efb365990ad2f542df559d26) | 适配 MoonBit 0.10.20，更新公共接口文件与环境要求 |
 | 2026-11-07 14:52:16、14:55:05 | [44eb356](https://github.com/sgy1023-crt/pixelmatch/commit/44eb356f05d2cc4ba0f45f83ea3e3e314b3ebb33)、[a3af3df](https://github.com/sgy1023-crt/pixelmatch/commit/a3af3df4143836bdd886dacce0e635dce48bee38) | 记录远端成功验证和推送自动触发证据 |
+| 2026-11-10 13:33:23 | [33bf45f](https://github.com/sgy1023-crt/pixelmatch/commit/33bf45fd39c8c5c414b688e81a2a1c22c806fb24) | 修复写入失败破坏已有 PNG 的问题，补写盘和并发回归 |
 
 十一月实际新增功能以 PNG CLI 为起点，CI、兼容性适配及文档分别记录。P0 的十月底完成时间已在报名备注披露，其赛期归属留待赛事方认定。本文将既有基础与十一月工作分别列明，供评审核查。
 
@@ -42,7 +44,7 @@
 ```sh
 git clone --branch codex/local-gaussian-ssim --single-branch https://github.com/sgy1023-crt/pixelmatch.git pixelmatch-ssim
 cd pixelmatch-ssim
-git checkout --detach a3af3df4143836bdd886dacce0e635dce48bee38
+git checkout --detach 33bf45fd39c8c5c414b688e81a2a1c22c806fb24
 moon version --all
 node --version
 moon update
@@ -64,18 +66,18 @@ moon build --target js --release --deny-warn src/cmd/pixelmatch
 node --test tools/ssim_cli_test.mjs
 ```
 
-2026-11-08 已按上述步骤在新目录检出指定基线并复现，CLI 测试 5/5 通过。生成 PNG 与参考图的 SHA-256 均为 `518692acff13021b4c1bd1ecbc7ae5e21fed958b8e2db4b928402d87a382fe36`。
+2026-11-10 已在 Windows 本地复现示例，CLI 测试 9 项通过，POSIX 专项跳过。Linux CI 从干净检出复现，CLI 测试 10 项全部通过。生成 PNG 与参考图的 SHA-256 均为 `518692acff13021b4c1bd1ecbc7ae5e21fed958b8e2db4b928402d87a382fe36`。
 
 | 检查 | 已记录结果 | 证据 |
 | --- | --- | --- |
-| JS、Wasm-GC、Native 库测试与严格检查 | 每目标 59/59，`--deny-warn` 通过 | [自动触发的 CI](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42349058856) |
-| PNG CLI 端到端测试 | 5/5，覆盖同图、局部变化、尺寸不匹配、无效 PNG 和目标路径不可写 | [测试脚本](../tools/ssim_cli_test.mjs)与同次 CI 的 PNG SSIM CLI 作业 |
-| README 样例 | 干净克隆与远端检出均可复现，生成的 PNG 与参考图 SHA-256 一致 | 同次 CI 的 Reproduce README example 步骤 |
+| JS、Wasm-GC、Native 库测试与严格检查 | 每目标 59/59，`--deny-warn` 通过 | [自动触发的 CI](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42762861381) |
+| PNG CLI 端到端测试 | Linux 10/10，包含基础功能、写入和替换故障、两组 8 进程并发、POSIX 链接及权限位 | [测试脚本](../tools/ssim_cli_test.mjs)与同次 CI 的 PNG SSIM CLI 作业 |
+| README 样例 | Windows 本地与远端检出均可复现，生成的 PNG 与参考图 SHA-256 一致 | 同次 CI 的 Reproduce README example 步骤 |
 | 独立参考数值 | 12 组参考、1,539 个 map 像素，map 最大绝对误差约 8.33e-15 | [P0 验证快照](ssim-validation.md#numeric-comparison)、[参考元数据](ssim-reference.json) |
 
-参考值采用 SciPy 的显式半径 Gaussian filter 和总体协方差计算，三个分量用直接二维加权中心矩核对，其中 8 组兼容案例另经 scikit-image 校验。普通 MoonBit 测试直接使用已入库的参考数据。CI 测试命令有 60 秒硬超时，工作流中三后端、CLI 及原有 Linux/macOS 性能作业共 6 个作业已全部成功。
+参考值采用 SciPy 的显式半径 Gaussian filter 和总体协方差计算，三个分量用直接二维加权中心矩核对，其中 8 组兼容案例另经 scikit-image 校验。普通 MoonBit 测试直接使用已入库的参考数据。CI 测试命令有 60 秒硬超时，工作流包含三后端库检查、CLI 及原有 Linux/macOS 性能作业。
 
-CI 的 `ssim-cli-demo` 产物包含 PNG 和 JSON，当前所引用运行的产物保留至 2026-12-07。可按季度评选安排重新运行并更新证据链接。[CI 产物入口](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42349058856)
+CI 的 `ssim-cli-demo` 产物包含 PNG 和 JSON，当前所引用运行的产物保留至 2026-12-10。可按季度评选安排重新运行并更新证据链接。[CI 产物入口](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42762861381)
 
 ### 已记录的性能
 
@@ -103,7 +105,7 @@ SSIM 核心与 CLI 业务流程均由 MoonBit 实现，复用既有 Image 类型
 
 ## 首版边界与评选准备
 
-项目按生产使用场景自查。文件输出并发、写入中断、异常 PNG 边界及端到端资源消耗的专项验证待补齐，各项完成后记录复现方法、实际结果和对应提交。[专项自查计划](../handoff.md#生产使用场景自查)
+项目按生产使用场景自查。文件输出并发及写入、替换失败已验证。共享路径以最后一次成功替换为准，输出目录需允许创建和替换文件。异常 PNG 边界及端到端资源消耗待进一步实测。[专项自查记录](../handoff.md#生产使用场景自查)
 
 - CLI 首版运行于 Node.js，使用默认 11×11、sigma 1.5。自定义 window／sigma 由库 API 提供。
 - 使用亮度通道，提供三个整体分量平均值。逐 RGB 通道 SSIM、MS-SSIM、逐像素分量图和彩色热力图留作后续范围。
@@ -115,6 +117,6 @@ SSIM 核心与 CLI 业务流程均由 MoonBit 实现，复用既有 Image 类型
 | --- | --- |
 | 关注第二赛季度评选安排 | 待组委会通知 |
 | 按评选通知核对成果说明和展示材料 | 工程证据已整理 |
-| 更新评选版本、专项验证、CI 和可下载产物 | 已记录可复现基线，专项验证待执行 |
+| 更新评选版本、专项验证、CI 和可下载产物 | 写盘与并发已验证，异常输入和资源边界待测 |
 
 内部排期与每日完成情况以 handoff.md 为准。[规划与交接](../handoff.md)
