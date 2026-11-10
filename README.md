@@ -71,8 +71,8 @@ proposed in Issue #6. [Upstream project](https://github.com/mizchi/pixelmatch) Â
 [Issue #6](https://github.com/mizchi/pixelmatch/issues/6) Â·
 [Development handoff](handoff.md)
 
-November hackathon acceptance evidence is collected in the Chinese draft.
-[Acceptance draft](docs/acceptance-2026-11.zh-CN.md)
+The Chinese project brief collects evidence for the quarterly community
+project review. [Quarterly review brief](docs/acceptance-2026-11.zh-CN.md)
 
 ## Usage
 

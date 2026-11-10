@@ -1,8 +1,8 @@
-# Pixelmatch SSIM 十一月验收说明草稿
+# Pixelmatch SSIM 季度优秀社区项目评选材料
 
-整理日期为北京时间 2026-11-08，申报方向为“已有项目维护”。项目已通过报名初审，依据为参赛者提供的组委会邮件。本文按邮件中的项目完成度、代码质量、开源合规性及与 MoonBit 生态的相关性整理证据，正式验收提交、最终评定及材料格式待组委会通知确认。
+更新日期为北京时间 2026-11-10，申报方向为“已有项目维护”。项目已通过报名初审，走季度优秀社区项目评选路径。章程第 5.2 节规定了社区项目季度评选流程，第六章将 150 元启动支持与 350 元完成支持列为新生态项目建设的基础共建激励。本方向无需新项目的月度验收，也不计入这 500 元支持。第二赛季度为 2026 年 11 月至 2027 年 1 月，具体评选安排以组委会通知为准。[正式章程](https://bxup9uklfcb.feishu.cn/wiki/Dx4Bwd6D1i3GfHkajQCcF7SznEd) · [十一月赛程](https://moonbitlang.github.io/Hackathon2026/)
 
-项目名称为“Pixelmatch 局部 Gaussian SSIM 与逐像素相似度图”。公开 Fork 的默认分支为 `codex/local-gaussian-ssim`，当前草稿引用的已验证代码基线为 `a3af3df4143836bdd886dacce0e635dce48bee38`。最终验收提交将在正式提交前锁定。[公开仓库](https://github.com/sgy1023-crt/pixelmatch) · [成果分支](https://github.com/sgy1023-crt/pixelmatch/tree/codex/local-gaussian-ssim) · [已验证基线](https://github.com/sgy1023-crt/pixelmatch/commit/a3af3df4143836bdd886dacce0e635dce48bee38)
+项目名称为“Pixelmatch 局部 Gaussian SSIM 与逐像素相似度图”。公开 Fork 的默认分支为 `codex/local-gaussian-ssim`。本文按初审邮件提到的四个维度整理工程证据，引用的已验证代码基线为 `a3af3df4143836bdd886dacce0e635dce48bee38`。[公开仓库](https://github.com/sgy1023-crt/pixelmatch) · [成果分支](https://github.com/sgy1023-crt/pixelmatch/tree/codex/local-gaussian-ssim) · [已验证基线](https://github.com/sgy1023-crt/pixelmatch/commit/a3af3df4143836bdd886dacce0e635dce48bee38)
 
 ## 项目完成度与新增贡献
 
@@ -31,7 +31,7 @@
 | 2026-11-07 14:48:29 | [490f6c6](https://github.com/sgy1023-crt/pixelmatch/commit/490f6c601e480be4efb365990ad2f542df559d26) | 适配 MoonBit 0.10.20，更新公共接口文件与环境要求 |
 | 2026-11-07 14:52:16、14:55:05 | [44eb356](https://github.com/sgy1023-crt/pixelmatch/commit/44eb356f05d2cc4ba0f45f83ea3e3e314b3ebb33)、[a3af3df](https://github.com/sgy1023-crt/pixelmatch/commit/a3af3df4143836bdd886dacce0e635dce48bee38) | 记录远端成功验证和推送自动触发证据 |
 
-十一月实际新增功能以 PNG CLI 为起点，CI、兼容性适配及文档分别记录。P0 的十月底完成时间已在报名备注披露，其赛期归属留待赛事方认定。本文将既有基础与十一月工作分别列明，供验收核查。
+十一月实际新增功能以 PNG CLI 为起点，CI、兼容性适配及文档分别记录。P0 的十月底完成时间已在报名备注披露，其赛期归属留待赛事方认定。本文将既有基础与十一月工作分别列明，供评审核查。
 
 ## 代码质量与复现
 
@@ -75,7 +75,7 @@ node --test tools/ssim_cli_test.mjs
 
 参考值采用 SciPy 的显式半径 Gaussian filter 和总体协方差计算，三个分量用直接二维加权中心矩核对，其中 8 组兼容案例另经 scikit-image 校验。普通 MoonBit 测试直接使用已入库的参考数据。CI 测试命令有 60 秒硬超时，工作流中三后端、CLI 及原有 Linux/macOS 性能作业共 6 个作业已全部成功。
 
-CI 的 `ssim-cli-demo` 产物包含 PNG 和 JSON，当前所引用运行的产物保留至 2026-12-07。正式验收前可按实际需要重新运行并更新证据链接。[CI 产物入口](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42349058856)
+CI 的 `ssim-cli-demo` 产物包含 PNG 和 JSON，当前所引用运行的产物保留至 2026-12-07。可按季度评选安排重新运行并更新证据链接。[CI 产物入口](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42349058856)
 
 ### 已记录的性能
 
@@ -93,7 +93,7 @@ CI 的 `ssim-cli-demo` 产物包含 PNG 和 JSON，当前所引用运行的产�
 
 本项目沿用上游 Apache-2.0 许可证，仓库保留许可证文本、mizchi/pixelmatch 来源及其对 mapbox/pixelmatch 的移植说明。依赖版本列于 `moon.mod`。新算法按 SSIM 数学定义实现，数值参考来源、工具版本及生成方式列于 API 文档与参考元数据。[许可证](../LICENSE) · [README](../README.md) · [依赖声明](../moon.mod) · [参考来源](ssim.md#independent-reference)
 
-项目使用 Codex 辅助实现、参考工具、测试、CI 和文档整理。参赛者负责理解技术路径、核对贡献边界、复现结果并对交付质量负责。验收时应能解释局部高斯窗口、亮度与透明度处理、原始分和展示分的区别，以及首版支持范围。
+项目使用 Codex 辅助实现、参考工具、测试、CI 和文档整理。参赛者负责理解技术路径、核对贡献边界、复现结果并对交付质量负责。成果展示包含局部高斯窗口、亮度与透明度处理、原始分和展示分的区别，以及首版支持范围。
 
 ## 与 MoonBit 生态的相关性
 
@@ -101,21 +101,20 @@ SSIM 核心与 CLI 业务流程均由 MoonBit 实现，复用既有 Image 类型
 
 上游 Issue #6 所需的局部窗口、逐像素 map、整体分数、三个分量及 PNG 命令行流程已有对应实现。截至本草稿整理时，成果在公开 Fork 分支，上游 Issue 仍开放，尚未向上游创建 PR 或获得合并。后续协作按实际沟通与评审结果记录。[上游需求](https://github.com/mizchi/pixelmatch/issues/6) · [项目进度](../handoff.md)
 
-## 首版边界与提交前待办
+## 首版边界与评选准备
 
-参赛者追加了按生产使用场景自查的要求。文件输出并发、写入中断、异常 PNG 边界及端到端资源消耗的专项验证待补齐，各项完成后记录复现方法、实际结果和对应提交。[专项自查计划](../handoff.md#生产使用场景自查)
+项目按生产使用场景自查。文件输出并发、写入中断、异常 PNG 边界及端到端资源消耗的专项验证待补齐，各项完成后记录复现方法、实际结果和对应提交。[专项自查计划](../handoff.md#生产使用场景自查)
 
 - CLI 首版运行于 Node.js，使用默认 11×11、sigma 1.5。自定义 window／sigma 由库 API 提供。
 - 使用亮度通道，提供三个整体分量平均值。逐 RGB 通道 SSIM、MS-SSIM、逐像素分量图和彩色热力图留作后续范围。
 - 输入尺寸须相同并容纳当前窗口，CLI 最小宽高均为 11。PNG 格式支持范围沿用 mizchi/image。
 - Windows 根目录 Native 构建的历史链接问题见 P0 报告。当前可复现入口为 Node.js CLI，Native 库测试与已记录的独立消费者构建分别有证据。[历史限制](ssim-validation.md#existing-native-root-build-failure)
-- 已完成报名初审，最终验收以组委会评定为准。正式截止日期、入口、材料模板、演示形式，以及上游 PR／发布要求待官方通知确认。
+- 已完成报名初审，季度评选日期、材料和展示要求以组委会通知为准。
 
-| 正式提交前事项 | 当前状态 |
+| 评选准备事项 | 当前状态 |
 | --- | --- |
-| 补入正式通知链接、截止与验收入口 | 待赛事群通知 |
-| 按正式模板核对四项要求及个人声明 | 草稿已备，格式待对齐 |
-| 锁定最终提交 SHA，核实相应 CI 和可下载产物 | 本文已给出可复现基线，最终提交待锁定 |
-| 按官方入口提交并保留回执 | 待正式提交 |
+| 关注第二赛季度评选安排 | 待组委会通知 |
+| 按评选通知核对成果说明和展示材料 | 工程证据已整理 |
+| 更新评选版本、专项验证、CI 和可下载产物 | 已记录可复现基线，专项验证待执行 |
 
 内部排期与每日完成情况以 handoff.md 为准。[规划与交接](../handoff.md)
