@@ -74,6 +74,9 @@ moon build --target js --release src/cmd/pixelmatch
 node --test tools/ssim_cli_test.mjs
 ```
 
+The [TodoMVC visual regression example](examples/ssim-visual/) compares the
+original pixel diff and the SSIM map on the same browser screenshots.
+
 This fork extends mizchi/pixelmatch with the SSIM library and the PNG workflow
 proposed in Issue #6. [Upstream project](https://github.com/mizchi/pixelmatch) ·
 [Issue #6](https://github.com/mizchi/pixelmatch/issues/6) ·
