@@ -2,6 +2,9 @@
 let usage : String = "Usage: pixelmatch ssim before.png after.png --output ssim-map.png"
 
 ///|
+let png_iend : Bytes = b"\x00\x00\x00\x00IEND\xAE\x42\x60\x82"
+
+///|
 suberror CliError {
   CliError(String)
 }
@@ -20,6 +23,10 @@ fn read_png(path : String) -> @pixelmatch_core.Image raise CliError {
   }
   let decoded = @image.decode_png(bytes) catch {
     err => raise CliError("cannot decode PNG '\{path}': \{err}")
+  }
+  // The codec can decode the pixels of a file truncated before the IEND chunk.
+  if !bytes.has_suffix(png_iend[:]) {
+    raise CliError("cannot decode PNG '\{path}': expected IEND at end of file")
   }
   let data = FixedArray::makei(decoded.data.length(), i => {
     decoded.data[i].to_int()

@@ -18,6 +18,7 @@ import { basename, join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { rgba_png } from "./fixtures/rgba_png.mjs";
 
 const repo = new URL("../", import.meta.url);
 const cli = fileURLToPath(new URL("_build/js/release/build/cmd/pixelmatch/pixelmatch.js", repo));
@@ -36,12 +37,12 @@ after(() => {
   rmdirSync(directory);
 });
 
-function cli_args(second, output) {
-  return [cli, "ssim", before, second, "--output", output];
+function cli_args(second, output, first = before) {
+  return [cli, "ssim", first, second, "--output", output];
 }
 
-function compare(second, output, { nodeArgs = [], env = process.env } = {}) {
-  const result = spawnSync(process.execPath, [...nodeArgs, ...cli_args(second, output)], {
+function run_cli(args, { nodeArgs = [], env = process.env } = {}) {
+  const result = spawnSync(process.execPath, [...nodeArgs, ...args], {
     encoding: "utf8",
     timeout: 10_000,
     env,
@@ -50,12 +51,16 @@ function compare(second, output, { nodeArgs = [], env = process.env } = {}) {
   return result;
 }
 
-function read_map(path) {
+function compare(second, output, { first = before, ...options } = {}) {
+  return run_cli(cli_args(second, output, first), options);
+}
+
+function read_map(path, width = 96, height = 64) {
   const png = readFileSync(path);
   assert.equal(png.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
   assert.equal(png.toString("ascii", 12, 16), "IHDR");
-  assert.equal(png.readUInt32BE(16), 96);
-  assert.equal(png.readUInt32BE(20), 64);
+  assert.equal(png.readUInt32BE(16), width);
+  assert.equal(png.readUInt32BE(20), height);
   return png;
 }
 
@@ -87,11 +92,15 @@ async function compare_in_parallel(jobs) {
   return results.map(result => result.value);
 }
 
-function assert_failure(result, message, output) {
+function assert_failure(result, message, output, previous) {
   assert.equal(result.status, 1, result.stderr);
   assert.equal(result.stdout, "");
   assert.match(result.stderr, message);
-  assert.equal(existsSync(output), false);
+  if (previous === undefined) {
+    assert.equal(existsSync(output), false);
+  } else {
+    assert.ok(readFileSync(output).equals(previous), "existing PNG was changed");
+  }
 }
 
 test("same PNG scores one and produces a 96×64 map", () => {
@@ -125,6 +134,61 @@ test("malformed PNG reports the input path", () => {
   writeFileSync(input, "this is not a PNG");
   assert_failure(compare(input, output), /cannot decode PNG.*invalid\.png/, output);
 });
+
+for (const [name, remove_bytes, error] of [
+  ["IDAT", 17, /cannot decode PNG.*truncated-IDAT\.png/],
+  ["IEND", 12, /cannot decode PNG.*truncated-IEND\.png.*IEND/],
+]) {
+  test(`truncation at ${name} leaves existing output intact`, () => {
+    const input = join(directory, `truncated-${name}.png`);
+    const output = join(directory, `previous-${name}.png`);
+    const complete = rgba_png(96, 64, () => 0x405060);
+    writeFileSync(input, complete.subarray(0, -remove_bytes));
+    const previous = readFileSync(expectedMap);
+    writeFileSync(output, previous);
+    assert_failure(compare(input, output), error, output, previous);
+  });
+}
+
+test("missing input reports the path without writing output", () => {
+  const input = join(directory, "missing input.png");
+  const output = join(directory, "missing input output.png");
+  assert_failure(compare(input, output), /cannot read.*missing input\.png/, output);
+});
+
+test("an unknown output option reports usage and preserves the destination", () => {
+  const output = join(directory, "unknown option output.png");
+  const previous = readFileSync(expectedMap);
+  writeFileSync(output, previous);
+  const result = run_cli([cli, "ssim", before, afterImage, "--out", output]);
+  assert_failure(result, /Usage: pixelmatch ssim/, output, previous);
+});
+
+test("omitting the output path reports usage", () => {
+  const result = run_cli([cli, "ssim", before, afterImage, "--output"]);
+  assert.equal(result.status, 1, result.stderr);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /Usage: pixelmatch ssim/);
+});
+
+test("11×11 images fit the default SSIM window", () => {
+  const input = join(directory, "11x11.png");
+  const output = join(directory, "minimum map.png");
+  writeFileSync(input, rgba_png(11, 11, () => 0x405060));
+  const scores = read_scores(compare(input, output, { first: input }));
+  assert.equal(scores.ssim, 1);
+  read_map(output, 11, 11);
+});
+
+for (const [width, height] of [[10, 11], [11, 10]]) {
+  test(`${width}×${height} images do not fit the default window`, () => {
+    const input = join(directory, `${width}x${height}.png`);
+    const output = join(directory, `${width}x${height} map.png`);
+    writeFileSync(input, rgba_png(width, height, () => 0x405060));
+    const result = compare(input, output, { first: input });
+    assert_failure(result, /SSIM window must fit both image dimensions/, output);
+  });
+}
 
 test("unwritable output reports the destination without printing JSON", () => {
   const output = join(directory, "missing directory", "output.png");

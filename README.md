@@ -55,8 +55,9 @@ object to stdout. The example's `ssim` is approximately `0.9984308931`. The
 `ssim` field clips the score to [0, 1], `raw_ssim` retains the signed score,
 and `luminance`, `contrast`, and `structure` are the component means. White
 indicates higher similarity. The command uses the library's default 11×11
-window and requires equal-sized images that fit that window. Errors are
-reported to stderr with a nonzero exit status.
+window and requires equal-sized images that fit that window. Each input must
+be a standalone PNG ending in its IEND chunk. Errors are reported to stderr
+with a nonzero exit status.
 [Example output image](examples/ssim-cli/expected-map.png)
 
 The output directory must allow creating and replacing files. The CLI writes
