@@ -1,6 +1,6 @@
 # Pixelmatch SSIM 进度与交接
 
-最近更新为北京时间 2026-11-11。维护分支为 `codex/local-gaussian-ssim`。
+最近更新为北京时间 2026-11-12。维护分支为 `codex/local-gaussian-ssim`。
 
 申报方向为“已有项目维护”，已通过报名初审，走季度优秀社区项目评选路径。章程第 5.2 节列出社区项目参与季度评选的流程，第六章将 150 元启动支持与 350 元完成支持列为新生态项目建设的基础共建激励。当前赛道无需新项目的月度验收，也不计入这 500 元支持。第二赛季度为 2026 年 11 月至 2027 年 1 月，具体评选安排以组委会通知为准。[正式章程](https://bxup9uklfcb.feishu.cn/wiki/Dx4Bwd6D1i3GfHkajQCcF7SznEd) · [十一月赛程](https://moonbitlang.github.io/Hackathon2026/)
 
@@ -12,8 +12,9 @@
 | 11 月 10 日 | 核对维护赛道规则，将成果说明改为季度评选材料 | 已按章程纠正赛道流程及奖励口径 |
 | 11 月 9–13 日 | 按生产使用场景验证文件输出、并发运行、异常输入和资源边界 | 11 月 10 日完成写盘和并发，11 月 11 日完成异常输入和两档大图实测 |
 | 11 月 9–11 日 | 两张 PNG → 局部 Gaussian SSIM → PNG 相似度图与 JSON | 11 月 6 日完成首版与本地验证 |
-| 11 月 12–13 日 | 从干净检出复现 README 示例，保留输入、输出与测试证据 | 11 月 6 日提前完成 |
+| 11 月 12–13 日 | 从公开 Fork 干净克隆复现 README 示例，保留输入、输出与测试证据 | 11 月 6 日完成 CLI 样例，11 月 12 日完成 TodoMVC 两组对照 |
 | 11 月 11 日 | 用浏览器界面截图并排展示上游像素差异与 SSIM 相似度图 | TodoMVC 两个受控场景已完成并可复现 |
+| 11 月 12 日 | 更新 Issue #6 的英文评论草稿，明确建议的评审范围 | 草稿已更新，待参赛者审阅 |
 | 11 月 16–20 日 | 汇总专项结果，核对上游来源与许可证，整理展示版本 | 工程自查和截图案例已汇总 |
 | 11 月下旬起 | 留意第二赛季度评选安排，按通知更新材料 | 具体评选安排待组委会通知 |
 
@@ -47,6 +48,11 @@
 | 可复现交付 | 干净克隆与远端 CI 已通过 | 每项新增场景保留命令、输入、预期、实际结果及对应修复提交 |
 
 本轮专项自查已覆盖写盘、并发、异常输入及单进程资源消耗。TodoMVC 浏览器截图案例补充了视觉回归场景中的实际输出。[截图对照](examples/ssim-visual/README.md)
+
+## 2026-11-12
+
+- 从公开 Fork 的 `codex/local-gaussian-ssim` 分支全新克隆并检出 `4298af3`。在 Windows 11、MoonBit CLI 0.1.20261104、moonc 0.10.20、Node.js 24.22.1 下，按案例 README 执行 `moon update` 及两次 `moon run --target js --release --deny-warn`。边框变深和文字消失两组输出共四张 PNG，均与对应参考图逐字节一致，复现后的检出状态干净。[固定版本的复现命令](https://github.com/sgy1023-crt/pixelmatch/blob/4298af3ea261b9c387fa1287265fe0f7fdaae87c/examples/ssim-visual/README.md#复现) · [该版本的 CI](https://github.com/sgy1023-crt/pixelmatch/actions/runs/42980905425)
+- 上游 Issue #6 仍开放。英文评论草稿已补上可运行的 PNG CLI、TodoMVC 截图案例和公开验证证据，拟询问维护者是否先评审库 API、数值 map、测试和文档，再单独评审 CLI。草稿留待参赛者审阅。[上游 Issue #6](https://github.com/mizchi/pixelmatch/issues/6)
 
 ## 2026-11-11
 
